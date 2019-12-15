@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>web二任务07</title>
+	<style type="text/css">
+		#showbox{width: 1200px;
+			height: 380px;
+			border:5px solid red;
+			margin:100px auto;
+			position: relative;
+			overflow: hidden;
+			cursor: pointer;}
+		#slider{width: 8400px;
+				position: absolute;
+				left: -1200px;
+				}
+		.imgdiv{width: 1200px;
+			float: left;
+		}
+		#left{width: 25px;
+			height: 40px;
+			float:left;
+			position: relative;
+			top: 150px;
+			left: 70px;
+			border:1px;
+			opacity: 0;
+			text-align: center;
+			line-height: 40px;
+			background-color:red;}
+		#right{float: left;
+			position:relative;
+			top:150px;
+			left: 1000px;
+			width: 25px;
+			height: 40px;
+			border:1px;
+			opacity: 0;
+			text-align: center;
+			line-height: 40px;
+			background-color:red;}
+		#anniu{
+			float: left;
+			position:relative;
+			top: 280px;
+			left: 500px;
+			}
+		li{float: left;
+			margin-left: 30px;
+			background-color: #ccc;
+			cursor: pointer;
+		}
+		#anniu .active{color:red;
+						opacity: 0.5;
+						}
+		#headbox{background-color: #ADADAD;
+				position: relative;
+				top: 50px;
+			    left: 0px;}
+		#headbox img{position: relative;
+					left: 200px;
+					bottom:0px;}
+		#neck{width: 800px;
+			float: right;
+			margin-right:180px;
+			overflow: hidden;
+		}
+		#neck div{color: red;
+			float: right;
+			position: relative;
+			top: 0px;
+			right: 300px;}
+	</style>
+</head>
+<body>
+	<div id="headbox">
+		<img src="./web大作业素材/a15.png"/>
+		<div id="neck">
+			<div id="textcontain">[温馨提示]近期有不少违法分子在网上骗人，请大家注意!!!</div>
+		</div>
+	</div>
+	<div class="box"id="showbox">
+		<div class="slider"id="slider">
+			<div class="imgdiv"><img src="./web大作业素材/b5.png"/></div>		
+			<div class="imgdiv"><img src="./web大作业素材/b1.png"/></div>
+			<div class="imgdiv"><img src="./web大作业素材/b2.png"/></div>
+			<div class="imgdiv"><img src="./web大作业素材/b3.png"/></div>
+			<div class="imgdiv"><img src="./web大作业素材/b4.png"/></div>
+			<div class="imgdiv"><img src="./web大作业素材/b5.png"/></div>
+			<div class="imgdiv"><img src="./web大作业素材/b1.png"/></div>
+		</div>
+		<span id="left"><</span>
+		<span id="right">></span>
+		<ul id="anniu">
+			<li class="active" id="active"></li>
+			<li class="l"></li>
+			<li class="l"></li>
+			<li class="l"></li>
+			<li class="l"></li>
+		</ul>
+	</div>
+</body>
+
+    <script type="text/javascript">
+    	var box=document.getElementById('showbox');
+    	var slider=document.getElementById('slider');
+    	var imgs=document.getElementsByClassName('imgdiv');
+    	var anniulist=document.getElementsByTagName('li');
+    	var anniu=document.getElementById('anniu');
+    	var left=document.getElementById('left');
+    	var right=document.getElementById('right');
+    	var	neck=document.getElementById('neck');
+    	var textcontain=document.getElementById('textcontain');
+    	var index=1;
+    	var isMoving=false;
+    	var num=0;
+		function textmove(){
+			num++
+			if(num>=80){
+				textcontain.style.right="-100px";
+				num=0;
+			}
+			animate(textcontain,{right:10*num})
+		}
+		var pmove=setInterval(textmove,200);
+		right.onclick=function(){
+			
+			next();}
+		left.onclick=function(){
+			console.log(index);
+			prev();}
+		function next(){
+			if (isMoving){
+				
+				return;
+			}
+			isMoving=true;
+			index++;
+			navchange();
+
+			animate(slider,{left:-1200*index},function(){
+				if(index>5){
+					
+					slider.style.left="-1200px";
+					index=1;
+				}
+				isMoving=false;
+			});
+			
+			console.log(index);
+			
+		}
+		
+		function prev(){
+			if(isMoving){
+				console.log("执行这里");
+				return;
+			}
+			isMoving=true;
+			index--;
+
+			navchange();
+			
+			animate(slider,{left:-1200*index},function(){
+				if(index===0){
+				
+					slider.style.left="-6000px";
+					index=5;
+				}
+				isMoving=false;
+			});
+			
+			
+		}
+		var timer=setInterval(next,2000);
+		function getStyle(obj, attr){
+			if(obj.currentStyle){
+				return obj.currentStyle[attr];
+			} else {
+				return getComputedStyle(obj, null)[attr];
+			}
+		}
+		box.onmouseover=function(){
+
+			animate(left,{opacity:50});
+			animate(right,{opacity:50});
+			clearInterval(timer);
+			console.log(isMoving);
+
+		}
+		box.onmouseout=function(){
+			animate(left,{opacity:0});
+			animate(right,{opacity:0});
+			timer=setInterval(next,2000);
+			
+        }
+		
+		
+		for (var i = 0; i < anniulist.length; i++) {
+			anniulist[i].idx=i;
+
+			anniulist[i].onclick=function(){
+				index=this.idx+1;
+				navchange();
+				
+				animate(slider,{left:-1200*index});
+			}
+		}
+		function navchange(){
+			for (var i = 0;i < anniulist.length; i++) {
+				anniulist[i].className="";
+
+			}
+			if(index>5){
+				anniulist[0].className='';
+			}else if(index===0){
+				anniulist[4].className="active";
+			}else{
+				anniulist[index-1].className="active";
+			}
+		}
+		function animate(obj,json,callback){
+			clearInterval(obj.timer);
+			obj.timer = setInterval(function(){
+				var isStop = true;
+				for(var attr in json){
+					var now = 0;
+					if(attr == 'opacity'){
+						now = parseInt(getStyle(obj,attr)*100);
+					}else{
+						now = parseInt(getStyle(obj,attr));
+					}
+					var speed = (json[attr] - now) / 8;
+					speed = speed>0?Math.ceil(speed):Math.floor(speed);
+					var cur = now + speed;
+					if(attr == 'opacity'){
+						obj.style[attr] = cur / 100;
+					}else{
+						obj.style[attr] = cur + 'px';
+					}
+					if(json[attr] !== cur){
+						isStop = false;
+					}
+				}
+				if(isStop){
+					clearInterval(obj.timer);
+					callback&&callback();
+				}
+			}, 30)
+		}
+	</script>
+</html>
